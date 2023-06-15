@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Steen-Papier-Schaar</title>
+<style>
+  .choice-images {
+    display: flex;
+    justify-content: center;
+  }
+  .choice-images img {
+    width: 300px;
+    height: 300px;
+    cursor: pointer;
+    margin: 5px;
+  }
+  .hidden {
+    display: none;
+  }
+</style>
+</head>
+<body>
+<h1>
+  <span class="">Computer:</span>
+  <span id="computer"></span><br>
+  <span class="">Jouw keuze:</span>
+  <span id="human"></span><br>
+  <span class="">Uitkomst:</span>
+  <span id="result"></span><br><br>
+</h1>
+<!-- keuze tussen steen, papier en schaar -->
+<div class="choice-images" onclick="makeChoice(event)">
+  <img src="steen.png" alt="Steen" data-choice="steen">
+  <img src="papier.png" alt="Papier" data-choice="papier">
+  <img src="schaar.png" alt="Schaar" data-choice="schaar">
+</div>
+<h1>
+  Highscore: <span id="highscore">0</span><br>
+  Streaks: <span id="streaks">0</span>
+</h1>
+<script>
+  // dit houd de highscores en streaks bij
+let highscore = 0;
+let streaks = 0;
+
+// Functie om de keuze door te geven
+function makeChoice(event) {
+  const target = event.target;
+  if (target.tagName !== 'IMG') return;
+
+  // vult de keuze van de speler in en geeft de computer een willekeurige keuze
+  const playerChoice = target.getAttribute('data-choice');
+  const choices = ['steen', 'papier', 'schaar'];
+  const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+
+  // Update de keuzes
+  document.getElementById('computer').innerHTML = computerChoice;
+  document.getElementById('human').innerHTML = playerChoice;
+
+   // laat het resultaat zien en bepaalt daardoor de winner
+  const result = determineWinner(playerChoice, computerChoice);
+  document.getElementById('result').innerHTML = result;
+   
+  // Update de highscore and streaks
+  updateHighscore(result);
+  updateStreaks(result);
+}
+// bepaald de winner door de keuzes die gemaakt zijn
+function determineWinner(playerChoice, computerChoice) {
+  if (playerChoice === computerChoice) {
+    return '<span class="">Gelijkspel</span>';
+  } else if (
+    (playerChoice === 'steen' && computerChoice === 'schaar') ||
+    (playerChoice === 'papier' && computerChoice === 'steen') ||
+    (playerChoice === 'schaar' && computerChoice === 'papier')
+  ) {
+    return '<span class="">Gewonnen</span>';
+  } else {
+    return '<span class="">Verloren</span>';
+  }
+}
+// update de higscore 
+function updateHighscore(result) {
+  if (result.includes('Gewonnen') && streaks + 1 > highscore) {
+    highscore = streaks + 1;
+  }
+// Update de highscore weer
+  document.getElementById('highscore').innerHTML = highscore;
+}
+function updateStreaks(result) {
+  if (result.includes('Gewonnen')) {
+    streaks++;
+  } else {
+    streaks = 0;
+  }
+ document.getElementById('streaks').innerHTML = streaks;
+}
+</script>
+
+</body>
+</html>    
